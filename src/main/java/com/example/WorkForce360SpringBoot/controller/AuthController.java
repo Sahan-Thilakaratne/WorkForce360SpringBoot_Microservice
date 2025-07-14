@@ -4,16 +4,21 @@ import com.example.WorkForce360SpringBoot.model.User;
 import com.example.WorkForce360SpringBoot.repository.UserRepository;
 import com.example.WorkForce360SpringBoot.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final UserRepository userRepository;
-    private final JWTUtil jwtUtil;
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private  JWTUtil jwtUtil;
 
     // Register user (no password encryption for simplicity)
     @PostMapping("/register")

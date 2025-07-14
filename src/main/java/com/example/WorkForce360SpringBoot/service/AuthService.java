@@ -23,7 +23,7 @@ public class AuthService {
     private JWTUtil jwtUtil;
 
     public String login (String email, String password){
-        User user = userRepository.findyEmail(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         if(!user.getPassword().equals(password)){
@@ -35,7 +35,7 @@ public class AuthService {
 
     public boolean validate(String token){
         String email = jwtUtil.getEmailFromToken(token);
-        return userRepository.exists(email);
+        return userRepository.existsByEmail(email);
     }
 
 
