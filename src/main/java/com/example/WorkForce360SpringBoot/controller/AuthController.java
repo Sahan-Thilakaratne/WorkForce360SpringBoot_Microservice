@@ -1,10 +1,11 @@
 package com.example.WorkForce360SpringBoot.controller;
 
+import com.example.WorkForce360SpringBoot.model.User;
 import com.example.WorkForce360SpringBoot.repository.UserRepository;
+import com.example.WorkForce360SpringBoot.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final UserRepository userRepository;
-    private final JwtUtil jwtUtil;
+    private final JWTUtil jwtUtil;
 
     // Register user (no password encryption for simplicity)
     @PostMapping("/register")
