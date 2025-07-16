@@ -26,13 +26,13 @@ public class JWTUtil {
                 .setSubject(email)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((System.currentTimeMillis() + expiration)))
-                .signWith(Keys.hmacShaKeyFor(secret.getBytes(), SignatureAlgorithm.HS256))
+                .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
                 .compact();
     }
 
     public String getEmailFromToken(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor(secret.getBytes())
+                .setSigningKey(Keys.hmacShaKeyFor(secret.getBytes()))
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
