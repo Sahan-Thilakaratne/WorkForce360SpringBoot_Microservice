@@ -12,16 +12,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(csrf -> csrf.disable()) // Disable CSRF for testing
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/v3/api-docs/**"
-                        ).permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll() // Allow all requests without auth
                 )
-                .formLogin(Customizer.withDefaults()) // no longer deprecated
-                .httpBasic(Customizer.withDefaults());
+                .formLogin(login -> login.disable()) // Disable form login
+                .httpBasic(basic -> basic.disable()); // Disable basic auth
 
         return http.build();
     }
