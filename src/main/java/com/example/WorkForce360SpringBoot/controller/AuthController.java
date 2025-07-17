@@ -1,7 +1,9 @@
 package com.example.WorkForce360SpringBoot.controller;
 
+import com.example.WorkForce360SpringBoot.model.Role;
 import com.example.WorkForce360SpringBoot.model.User;
 import com.example.WorkForce360SpringBoot.repository.UserRepository;
+import com.example.WorkForce360SpringBoot.service.AuthService;
 import com.example.WorkForce360SpringBoot.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,9 @@ public class AuthController {
     private UserRepository userRepository;
 
     @Autowired
+    private AuthService authService;
+
+    @Autowired
     private  JWTUtil jwtUtil;
 
     // Register user (no password encryption for simplicity)
@@ -26,6 +31,10 @@ public class AuthController {
         if (userRepository.existsByEmail(user.getEmail())) {
             return ResponseEntity.badRequest().body("Email already registered");
         }
+
+        if(user.getRole() == null){
+            user.setRole(Role.EMPLOYEE);
+        }
         userRepository.save(user);
         return ResponseEntity.ok("User registered successfully");
     }
@@ -33,7 +42,7 @@ public class AuthController {
     // Login and return JWT
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody User loginRequest) {
-        User user = userRepository.findByEmail(loginRequest.getEmail())
+        /*User user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElse(null);
 
         if (user == null || !user.getPassword().equals(loginRequest.getPassword())) {
@@ -41,7 +50,11 @@ public class AuthController {
         }
 
         String token = jwtUtil.generateToken(user.getEmail());
+        return ResponseEntity.ok(token);*/
+
+        String token = authService.login(loginRequest.getEmail(), loginRequest.getPassword());
         return ResponseEntity.ok(token);
+
     }
 
     // Manually validate token (optional)

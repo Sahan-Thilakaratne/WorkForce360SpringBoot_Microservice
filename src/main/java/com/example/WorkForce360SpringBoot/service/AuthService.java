@@ -26,7 +26,7 @@ public class AuthService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if(!user.getPassword().equals(password)){
+        if(user == null || !user.getPassword().equals(password)){
             throw  new RuntimeException("Invlalid Password");
         }
 

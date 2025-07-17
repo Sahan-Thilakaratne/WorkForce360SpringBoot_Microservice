@@ -21,6 +21,7 @@ public class User {
 
     private  String name;
 
+    //@Column(unique = true)
     private String email;
 
     private String password;
@@ -32,10 +33,18 @@ public class User {
 
     public String getEmail(){
 
-        return  name;
+        return  email;
     }
 
     public String getPassword(){
         return password;
+    }
+
+    public void setRole (Role role){
+        this.role = role;
+    }
+
+    public Role getRole(){
+        return role;
     }
 }
