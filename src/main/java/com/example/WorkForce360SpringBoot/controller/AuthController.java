@@ -5,10 +5,16 @@ import com.example.WorkForce360SpringBoot.model.User;
 import com.example.WorkForce360SpringBoot.repository.UserRepository;
 import com.example.WorkForce360SpringBoot.service.AuthService;
 import com.example.WorkForce360SpringBoot.util.JWTUtil;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 @RestController
@@ -27,7 +33,7 @@ public class AuthController {
 
     // Register user (no password encryption for simplicity)
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody User user) {
+    public ResponseEntity<String> register(@Valid @RequestBody User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
             return ResponseEntity.badRequest().body("Email already registered");
         }
@@ -37,6 +43,17 @@ public class AuthController {
         }
         userRepository.save(user);
         return ResponseEntity.ok("User registered successfully");
+    }
+
+    // ✅ Handle validation errors
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+                errors.put(error.getField(), error.getDefaultMessage()));
+
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
     // Login and return JWT
